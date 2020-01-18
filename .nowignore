@@ -1,0 +1,5 @@
+**/*.spec.ts
+.github
+yarn-error.log
+*.spec
+__snapshots__

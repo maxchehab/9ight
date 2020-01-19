@@ -1,6 +1,6 @@
 # Spank
 
-A Next.js or Node Lambda Framework
+A Next.js or Node lambda Framework
 
 ```ts
 import { NextApiRequest, NextApiResponse } from 'next';

@@ -1,15 +1,15 @@
 {
-  "name": "request-decorators",
+  "name": "query-validation",
   "version": "0.0.0",
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",
+    "babel-plugin-parameter-decorator": "^1.0.15",
     "@types/node": "^12.12.21",
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
     "typescript": "3.7.3"
   },
   "dependencies": {
-    "class-validator": "^0.11.0",
     "next": "9.2.0",
     "react": "^16.12.0",
     "react-dom": "16.8.6",

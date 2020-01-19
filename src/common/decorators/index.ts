@@ -7,4 +7,6 @@ export {
   Patch,
   Post,
   Put,
-} from './request-mapping.decorators';
+} from './method-mapping.decorators';
+
+export { Query, Body } from './parameter-mapping.decorators';

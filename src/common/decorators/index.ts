@@ -9,4 +9,4 @@ export {
   Put,
 } from './method-mapping.decorators';
 
-export { Query, Body } from './parameter-mapping.decorators';
+export { Query, Body, Req, Res } from './parameter-mapping.decorators';

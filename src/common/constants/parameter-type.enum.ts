@@ -1,4 +1,6 @@
 export enum ParameterType {
-  QUERY = 'QUERY',
   BODY = 'BODY',
+  QUERY = 'QUERY',
+  REQ = 'REQ',
+  RES = 'RES',
 }

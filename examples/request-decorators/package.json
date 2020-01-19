@@ -6,6 +6,7 @@
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
     "@babel/plugin-proposal-decorators": "^7.8.3",
+    "babel-plugin-parameter-decorator": "^1.0.15",
     "typescript": "3.7.3"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-import { NextApiRequest } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 import {
   DecoratorTarget,
@@ -68,5 +68,21 @@ export const Body = (validator?: Validator) =>
       }
 
       return req.body || {};
+    },
+  );
+
+export const Req = () =>
+  createParameterMappingDecorator(
+    ParameterType.REQ,
+    async (req: NextApiRequest) => {
+      return req;
+    },
+  );
+
+export const Res = () =>
+  createParameterMappingDecorator(
+    ParameterType.RES,
+    async (_req: NextApiRequest, res: NextApiResponse) => {
+      return res;
     },
   );

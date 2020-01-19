@@ -36,8 +36,10 @@ export function Lambda<t>(
 
     const args = new Array();
 
-    for await (const param of parameters) {
-      args[param.index] = await param.transform(req, res);
+    if (parameters) {
+      for await (const param of parameters) {
+        args[param.index] = await param.transform(req, res);
+      }
     }
 
     const response = await (lambda as any)[property](...args);

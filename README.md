@@ -3,15 +3,9 @@
 A Next.js or Node lambda Framework
 
 ```ts
-import { NextApiRequest } from 'next';
-import { Get, Lambda, Post } from 'spank';
+import { Get, Lambda, Post, Body } from 'spank';
 
-interface User {
-  name: string;
-  id: number;
-}
-
-const db: Array<User> = [];
+const db = [];
 
 class Users {
   @Get()
@@ -20,8 +14,8 @@ class Users {
   }
 
   @Post()
-  create(req: NextApiRequest) {
-    const user = { id: db.length, name: req.body.name };
+  create(@Body() body: any) {
+    const user = { id: db.length, name: body.name };
 
     db.push(user);
 

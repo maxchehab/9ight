@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ulid } from 'ulid';
-
-import { Lambda, Post, Get } from '../lib';
+import { Get, Lambda, Post } from 'spank';
 
 interface User {
   name: string;
-  id: string;
+  id: number;
 }
 
 const UserDB: Array<User> = [];
@@ -18,7 +16,7 @@ class Users {
 
   @Post()
   create(req: NextApiRequest, res: NextApiResponse) {
-    const user = { id: `usr_${ulid()}`, name: req.body.name };
+    const user = { id: UserDB.length, name: req.body.name };
 
     UserDB.push(user);
 

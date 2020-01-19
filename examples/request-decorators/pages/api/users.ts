@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest } from 'next';
 import { Get, Lambda, Post } from 'spank';
 
 interface User {
@@ -6,21 +6,21 @@ interface User {
   id: number;
 }
 
-const UserDB: Array<User> = [];
+const db: Array<User> = [];
 
 class Users {
   @Get()
-  list(_req: NextApiRequest, res: NextApiResponse) {
-    return res.json(UserDB);
+  list() {
+    return db;
   }
 
   @Post()
-  create(req: NextApiRequest, res: NextApiResponse) {
-    const user = { id: UserDB.length, name: req.body.name };
+  create(req: NextApiRequest) {
+    const user = { id: db.length, name: req.body.name };
 
-    UserDB.push(user);
+    db.push(user);
 
-    return res.status(201).json(user);
+    return user;
   }
 }
 

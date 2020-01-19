@@ -1,5 +1,7 @@
 import { NextApiResponse, NextApiRequest } from 'next';
+
 import { LambdaClass } from './interfaces';
+import { RequestMethod } from '../common';
 
 export type LambdaFunction = (
   req: NextApiRequest,
@@ -28,6 +30,23 @@ export function Lambda<t>(Class: LambdaClass<t>): LambdaFunction {
       return res.status(404).json({ message: 'Not found' });
     }
 
-    return (lambda as any)[property](req, res);
+    const response = await (lambda as any)[property](req, res);
+
+    let statusCode = 200;
+
+    switch (requestMethod) {
+      case RequestMethod.POST: {
+        statusCode = 201;
+        break;
+      }
+    }
+
+    res.status(statusCode);
+
+    if (typeof response === 'object') {
+      return res.json(response);
+    }
+
+    return res.send(response);
   };
 }

@@ -15,7 +15,7 @@ Deploy the example using [ZEIT Now](https://zeit.co/now):
 Download the example:
 
 ```bash
-curl https://codeload.github.com/maxchehab/spank/tar.gz/maser | tar -xz --strip=2 spank-master/examples/request-decorators
+curl https://codeload.github.com/maxchehab/spank/tar.gz/master | tar -xz --strip=2 spank-master/examples/request-decorators
 cd request-decorators
 ```
 

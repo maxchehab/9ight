@@ -7,9 +7,7 @@ import {
 } from '../interfaces';
 import { ParameterType } from '../constants';
 
-type Validator = (input: {
-  [key: string]: string | string[];
-}) => Promise<boolean>;
+type Validator = (input: any) => Promise<boolean>;
 
 function createParameterMappingDecorator(
   type: ParameterType,
@@ -37,6 +35,9 @@ function createParameterMappingDecorator(
   };
 }
 
+/**
+ * Request Query Decorator. Attaches the Request's query with an optional validator.
+ */
 export const Query = (validator?: Validator) =>
   createParameterMappingDecorator(
     ParameterType.QUERY,
@@ -54,6 +55,9 @@ export const Query = (validator?: Validator) =>
     },
   );
 
+/**
+ * Request Body Decorator. Attaches the Request's body with an optional validator.
+ */
 export const Body = (validator?: Validator) =>
   createParameterMappingDecorator(
     ParameterType.BODY,
@@ -71,6 +75,9 @@ export const Body = (validator?: Validator) =>
     },
   );
 
+/**
+ * Request Decorator. Attaches the the raw Request.
+ */
 export const Req = () =>
   createParameterMappingDecorator(
     ParameterType.REQ,
@@ -79,6 +86,9 @@ export const Req = () =>
     },
   );
 
+/**
+ * Response Decorator. Attaches the raw Response.
+ */
 export const Res = () =>
   createParameterMappingDecorator(
     ParameterType.RES,

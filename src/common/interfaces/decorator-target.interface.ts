@@ -8,6 +8,6 @@ export interface DecoratorTarget {
 
 export interface Method {
   property: string | symbol;
-  path: string | undefined;
+  path: string;
   method: RequestMethod;
 }

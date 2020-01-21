@@ -6,12 +6,15 @@ import * as _eval from 'eval';
 
 import { LambdaFunction } from './lambda';
 
-export async function rewrites() {
-  const dir = process.cwd();
-  console.log({ dir });
-  const apiPath = path.join(dir, 'pages', 'api', '**/*.ts');
+interface RouteMap {
+  source: string;
+  destination: string;
+}
 
-  const files = glob.sync(apiPath);
+export async function rewrites(): Promise<RouteMap[]> {
+  const dir = process.cwd();
+  const pagePath = path.join(dir, 'pages');
+  const files = glob.sync(path.join(pagePath, 'api', '**/*.ts'));
 
   const compiler = tsnode.create();
 
@@ -23,7 +26,9 @@ export async function rewrites() {
   config.compilerOptions.target = 'es5';
   config.compilerOptions.module = 'es5';
 
-  for (const file of files) {
+  const rewrites = new Array<RouteMap>();
+
+  for await (const file of files) {
     const content = fs.readFileSync(file, { encoding: 'UTF8' });
     const { outputText } = compiler.ts.transpileModule(content, config);
 
@@ -36,8 +41,33 @@ export async function rewrites() {
 
     const { __9ight__methods: methods } = lambda;
 
-    console.log(methods);
+    const { dir, name } = path.parse(file);
+    const fileName = name === 'index' ? '' : name;
+    const destPath = path.join(dir, fileName);
+    const destination = path.join('/', path.relative(pagePath, destPath));
+
+    methods.forEach(method => {
+      const source = path.join(
+        '/',
+        path.relative(pagePath, dir),
+        fileName,
+        method.path,
+      );
+
+      rewrites.push({ source, destination });
+    });
   }
 
-  return [];
+  return rewrites.reduce((routes, map) => {
+    const exists = routes.find(
+      ({ source, destination }) =>
+        source === map.source && destination === map.destination,
+    );
+
+    if (!exists) {
+      routes.push(map);
+    }
+
+    return routes;
+  }, []);
 }

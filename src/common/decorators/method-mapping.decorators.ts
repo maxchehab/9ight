@@ -2,7 +2,7 @@ import { DecoratorTarget, Method } from '../interfaces';
 import { RequestMethod } from '../constants';
 
 function createMethodMappingDecorator(method: RequestMethod) {
-  return function(path?: string): MethodDecorator {
+  return function(path: string = '/'): MethodDecorator {
     return function(target: DecoratorTarget, property: string | symbol) {
       if (!target.__9ight__methods) {
         target.__9ight__methods = new Array<Method>();

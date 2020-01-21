@@ -1,4 +1,4 @@
-import { Get, Lambda, Post, Body } from 'spank';
+import { Get, Lambda, Post, Body } from '6ix';
 
 interface User {
   name: string;

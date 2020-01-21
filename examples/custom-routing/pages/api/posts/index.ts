@@ -1,4 +1,4 @@
-import { Get, Lambda, Post } from 'spank';
+import { Get, Lambda, Post } from '6ix';
 
 class Posts {
   // Using the @Query decorator with a validator

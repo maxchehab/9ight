@@ -1,5 +1,5 @@
 {
-  "name": "custom-routing ",
+  "name": "custom-routing",
   "version": "0.0.0",
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",
@@ -13,7 +13,7 @@
     "next": "^9.2.1-canary.4",
     "react": "^16.12.0",
     "react-dom": "16.8.6",
-    "spank": "../../"
+    "6ix": "latest"
   },
   "scripts": {
     "dev": "next",

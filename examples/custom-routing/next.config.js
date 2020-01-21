@@ -1,4 +1,4 @@
-const { rewrites } = require('spank');
+const { rewrites } = require('6ix');
 
 module.exports = {
   experimental: {

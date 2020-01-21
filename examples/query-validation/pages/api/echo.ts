@@ -1,4 +1,4 @@
-import { Get, Lambda, Query, Post, Body } from 'spank';
+import { Get, Lambda, Query, Post, Body } from '6ix';
 import { IsString, validate } from 'class-validator';
 
 class EchoQuery {

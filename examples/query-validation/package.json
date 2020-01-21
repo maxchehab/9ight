@@ -13,7 +13,7 @@
     "next": "9.2.0",
     "react": "^16.12.0",
     "react-dom": "16.8.6",
-    "spank": "latest"
+    "6ix": "latest"
   },
   "scripts": {
     "dev": "next",

@@ -1,9 +1,9 @@
-# Spank
+# 6ix
 
 A Next.js or Node lambda Framework
 
 ```ts
-import { Get, Lambda, Post, Body } from 'spank';
+import { Get, Lambda, Post, Body } from '6ix';
 
 const db = [];
 

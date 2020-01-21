@@ -79,6 +79,25 @@ export const Body = (validator?: Validator) =>
   );
 
 /**
+ * Request Param Decorator. Attaches the path's interpolated parameters if available. Otherwise an empty object.
+ */
+export const Params = (validator?: Validator) =>
+  createParameterMappingDecorator(
+    ParameterType.PARAMS,
+    async (req: NextApiRequest) => {
+      if (validator) {
+        const valid = await validator(req.query);
+
+        if (!valid) {
+          throw Error('bad request');
+        }
+      }
+
+      return (req as any).params || {};
+    },
+  );
+
+/**
  * Request Decorator. Attaches the the raw Request.
  */
 export const Req = () =>

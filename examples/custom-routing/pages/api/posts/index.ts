@@ -1,16 +1,20 @@
-import { Get, Lambda, Post } from '9ight';
+import { Get, Lambda, Post, Params } from '9ight';
+
+const db = [
+  { id: 0, title: 'A post' },
+  { id: 1, title: 'Another post' },
+  { id: 2, title: 'Yet another post' },
+];
 
 class Posts {
-  // Using the @Query decorator with a validator
   @Get()
   async list() {
-    return `list posts`;
+    return db;
   }
 
-  // Using the @Body decorator with no validator.
-  @Post()
-  async create() {
-    return 'creating posts';
+  @Get(':id/test/:test')
+  async get(@Params() params: any) {
+    return params;
   }
 }
 

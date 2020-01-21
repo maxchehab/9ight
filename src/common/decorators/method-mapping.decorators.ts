@@ -1,3 +1,5 @@
+import * as paths from 'path';
+
 import { DecoratorTarget, Method } from '../interfaces';
 import { RequestMethod } from '../constants';
 
@@ -8,7 +10,11 @@ function createMethodMappingDecorator(method: RequestMethod) {
         target.__9ight__methods = new Array<Method>();
       }
 
-      target.__9ight__methods.push({ property, path, method });
+      target.__9ight__methods.push({
+        property,
+        path: paths.join('/', path),
+        method,
+      });
     };
   };
 }

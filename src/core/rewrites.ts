@@ -4,6 +4,8 @@ import * as path from 'path';
 import * as tsnode from 'ts-node';
 import * as _eval from 'eval';
 
+import { LambdaFunction } from './lambda';
+
 export async function rewrites() {
   const dir = process.cwd();
   console.log({ dir });
@@ -25,8 +27,14 @@ export async function rewrites() {
     const content = fs.readFileSync(file, { encoding: 'UTF8' });
     const { outputText } = compiler.ts.transpileModule(content, config);
 
-    const lambdaFn = _eval(outputText, true).default;
-    const { methods } = await lambdaFn(true);
+    const lambdaFn: LambdaFunction = _eval(outputText, true).default;
+    const lambda = await lambdaFn(true);
+
+    if (!lambda) {
+      continue;
+    }
+
+    const { __9ight__methods: methods } = lambda;
 
     console.log(methods);
   }

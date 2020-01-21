@@ -18,12 +18,15 @@ function createParameterMappingDecorator(
     propertyKey: string | symbol,
     parameterIndex: number,
   ) {
-    if (!target.methodParameters) {
-      target.methodParameters = new Map<string | symbol, Parameter[]>();
+    if (!target.__9ight__methodParameters) {
+      target.__9ight__methodParameters = new Map<
+        string | symbol,
+        Parameter[]
+      >();
     }
 
     const existingParameters: Parameter[] =
-      target.methodParameters.get(propertyKey) || [];
+      target.__9ight__methodParameters.get(propertyKey) || [];
 
     existingParameters.push({
       index: parameterIndex,
@@ -31,7 +34,7 @@ function createParameterMappingDecorator(
       transform,
     });
 
-    target.methodParameters.set(propertyKey, existingParameters);
+    target.__9ight__methodParameters.set(propertyKey, existingParameters);
   };
 }
 

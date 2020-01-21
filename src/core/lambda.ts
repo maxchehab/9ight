@@ -4,8 +4,8 @@ import { RequestMethod } from '../common';
 import { ClassType, DecoratorTarget } from '../common/interfaces';
 
 export type LambdaFunction = (
-  req: NextApiRequest,
-  res: NextApiResponse,
+  req: NextApiRequest | boolean,
+  res?: NextApiResponse,
 ) => Promise<void | DecoratorTarget>;
 
 export function Lambda<t>(
@@ -13,7 +13,7 @@ export function Lambda<t>(
 ): LambdaFunction {
   const lambda = new Class();
 
-  if (!lambda.methods) {
+  if (!lambda.__9ight__methods) {
     throw new TypeError(
       'Class provided to Lambda is missing Request Method decorators.',
     );
@@ -30,7 +30,9 @@ export function Lambda<t>(
       return res.status(404).json({ message: 'Not found' });
     }
 
-    const property = lambda.methods && lambda.methods.get(requestMethod);
+    const { property } = lambda.__9ight__methods?.find(
+      ({ method }) => method === requestMethod,
+    );
 
     if (!property) {
       return res.status(404).json({ message: 'Not found' });
@@ -38,8 +40,7 @@ export function Lambda<t>(
 
     const args = new Array();
 
-    const parameters =
-      lambda.methodParameters && lambda.methodParameters.get(property);
+    const parameters = lambda.__9ight__methodParameters?.get(property);
 
     if (parameters) {
       for await (const param of parameters) {

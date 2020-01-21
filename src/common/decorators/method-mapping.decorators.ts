@@ -1,14 +1,14 @@
-import { DecoratorTarget } from '../interfaces';
+import { DecoratorTarget, Method } from '../interfaces';
 import { RequestMethod } from '../constants';
 
 function createMethodMappingDecorator(method: RequestMethod) {
-  return function(): MethodDecorator {
-    return function(target: DecoratorTarget, propertyKey: string | symbol) {
-      if (!target.methods) {
-        target.methods = new Map<RequestMethod, string>();
+  return function(path?: string): MethodDecorator {
+    return function(target: DecoratorTarget, property: string | symbol) {
+      if (!target.__9ight__methods) {
+        target.__9ight__methods = new Array<Method>();
       }
 
-      target.methods.set(method, propertyKey);
+      target.__9ight__methods.push({ property, path, method });
     };
   };
 }

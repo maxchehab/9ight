@@ -10,10 +10,10 @@
     "typescript": "3.7.3"
   },
   "dependencies": {
+    "9ight": "../../",
     "next": "^9.2.1-canary.4",
     "react": "^16.12.0",
-    "react-dom": "16.8.6",
-    "6ix": "latest"
+    "react-dom": "16.8.6"
   },
   "scripts": {
     "dev": "next",

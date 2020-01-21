@@ -1,9 +1,9 @@
-# 6ix
+# 9ight
 
 A Next.js or Node lambda Framework
 
 ```ts
-import { Get, Lambda, Post, Body } from '6ix';
+import { Get, Lambda, Post, Body } from '9ight';
 
 const db = [];
 

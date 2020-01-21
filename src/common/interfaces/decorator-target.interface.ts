@@ -1,6 +1,13 @@
 import { Parameter } from './parameter.interface';
+import { RequestMethod } from '../constants';
 
 export interface DecoratorTarget {
-  methods?: Map<string, string | symbol>;
-  methodParameters?: Map<string | symbol, Parameter[]>;
+  __9ight__methods?: Array<Method>;
+  __9ight__methodParameters?: Map<string | symbol, Parameter[]>;
+}
+
+export interface Method {
+  property: string | symbol;
+  path: string | undefined;
+  method: RequestMethod;
 }

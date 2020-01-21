@@ -1,4 +1,4 @@
-const { rewrites } = require('6ix');
+const { rewrites } = require('9ight');
 
 module.exports = {
   experimental: {

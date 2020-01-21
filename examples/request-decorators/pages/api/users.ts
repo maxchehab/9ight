@@ -1,4 +1,4 @@
-import { Get, Lambda, Post, Body } from '6ix';
+import { Get, Lambda, Post, Body } from '9ight';
 
 interface User {
   name: string;

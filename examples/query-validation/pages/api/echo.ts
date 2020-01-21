@@ -1,4 +1,4 @@
-import { Get, Lambda, Query, Post, Body } from '6ix';
+import { Get, Lambda, Query, Post, Body } from '9ight';
 import { IsString, validate } from 'class-validator';
 
 class EchoQuery {

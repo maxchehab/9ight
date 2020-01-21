@@ -23,18 +23,15 @@ export default class Users {
 
   @Patch(':id')
   update(@Body() body) {
-    const user = db[id];
-    db[id] = Object.assign(user, body)
+    db[id] = Object.assign(db[id], body)
+    return  db[id];
 
-    return user
   }
 
   @Post()
-  create(@Body() body: any) {
-    const user = { id: db.length, name: body.name };
-    db.push(user);
-    
-    return user;
+  create(@Body() body) {
+    db.push({ id: db.length, name: body.name });
+    return db.slice(-1)
   }
 
   @Get()

@@ -1,4 +1,4 @@
-# 9ight
+# 9ight 🌒 
 
 A Next.js API framework
 
@@ -24,7 +24,7 @@ export default class Users {
   @Patch(':id')
   update(@Body() body) {
     const user = db[id];
-    db[id] = Object.join(user, body)
+    db[id] = Object.assign(user, body)
 
     return user
   }
@@ -33,6 +33,7 @@ export default class Users {
   create(@Body() body: any) {
     const user = { id: db.length, name: body.name };
     db.push(user);
+    
     return user;
   }
 

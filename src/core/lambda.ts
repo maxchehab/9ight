@@ -6,7 +6,7 @@ import { ClassType, DecoratorTarget } from '../common/interfaces';
 export type LambdaFunction = (
   req: NextApiRequest,
   res: NextApiResponse,
-) => Promise<void>;
+) => Promise<void | DecoratorTarget>;
 
 export function Lambda<t>(
   Class: ClassType<t & DecoratorTarget>,
@@ -19,7 +19,11 @@ export function Lambda<t>(
     );
   }
 
-  return async (req: NextApiRequest, res: NextApiResponse) => {
+  return async (req: NextApiRequest | boolean, res: NextApiResponse) => {
+    if (typeof req === 'boolean') {
+      return lambda;
+    }
+
     const requestMethod = req.method && req.method.toUpperCase();
 
     if (typeof requestMethod !== 'string') {
@@ -32,9 +36,10 @@ export function Lambda<t>(
       return res.status(404).json({ message: 'Not found' });
     }
 
-    const parameters = lambda.methodParameters.get(property);
-
     const args = new Array();
+
+    const parameters =
+      lambda.methodParameters && lambda.methodParameters.get(property);
 
     if (parameters) {
       for await (const param of parameters) {

@@ -7,6 +7,7 @@
     "./dist"
   ],
   "devDependencies": {
+    "@types/glob": "^7.1.1",
     "@types/jest": "24.0.11",
     "@types/next-server": "8.1.2",
     "@types/node": "8.10.14",
@@ -20,12 +21,14 @@
     "now": "16.7.3",
     "test-listen": "1.1.0",
     "ts-jest": "24.0.2",
-    "ts-node": "8.5.4",
+    "ts-node": "^8.6.2",
     "tslint": "5.20.1",
     "typescript": "3.4.5"
   },
   "dependencies": {
     "class-validator": "0.11.0",
+    "eval": "^0.1.4",
+    "glob": "^7.1.6",
     "next": "9.2.0",
     "react": "16.12.0",
     "react-dom": "16.8.6",

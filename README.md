@@ -7,7 +7,7 @@ yarn add 9ight next
 ```
 
 ```ts
-// pages/api/user.ts
+// pages/api/users.ts
 
 import { Body, Controller, Get, Params, Post } from '9ight';
 
@@ -24,8 +24,7 @@ export default class Users {
   @Patch(':id')
   update(@Body() body) {
     db[id] = Object.assign(db[id], body)
-    return  db[id];
-
+    return db[id];
   }
 
   @Post()

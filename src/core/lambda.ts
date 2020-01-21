@@ -1,6 +1,7 @@
 import { NextApiResponse, NextApiRequest } from 'next';
 import { pathToRegexp, Key } from 'path-to-regexp';
-import * as path from 'path';
+import * as paths from 'path';
+import * as urls from 'url';
 
 import { RequestMethod } from '../common';
 import { ClassType, DecoratorTarget, Method } from '../common/interfaces';
@@ -14,20 +15,21 @@ interface Params {
   [key: string]: string;
 }
 
-function generateUrlFromMethods(methods: Method[], url: string) {
+function generateUrlFromMethods(methods: Method[], url: string): string {
   const maxSegmentLength = Math.max(
     ...methods.map(
       ({ path }) => path.replace(/^\/|\/$/g, '').split('/').length,
     ),
   );
 
+  url = urls.parse(url).pathname;
   url = url.replace(/^\/|\/$/g, '');
   url = url
     .split('/')
     .slice(url.split('/').length - maxSegmentLength)
     .join('/');
 
-  return path.join('/', url);
+  return paths.join('/', url);
 }
 
 function match(url: string, path: string): Params | void {
@@ -113,6 +115,8 @@ export function Lambda<t>(
     for await (const param of parameters) {
       args[param.index] = await param.transform(req, res);
     }
+
+    console.log({ args });
 
     const response = await (lambda as any)[property](...args);
 

@@ -1,4 +1,4 @@
-import { Get, Lambda, Post, Params } from '9ight';
+import { Get, Lambda, Query, Params } from '9ight';
 
 const db = [
   { id: 0, title: 'A post' },
@@ -13,8 +13,8 @@ class Posts {
   }
 
   @Get(':id/test/:test')
-  async get(@Params() params: any) {
-    return params;
+  async get(@Query() query: any, @Params() params: any) {
+    return { ...params, ...query };
   }
 }
 

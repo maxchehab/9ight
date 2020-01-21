@@ -13,7 +13,7 @@ import { Body, Controller, Get, Params, Post } from '9ight';
 
 const db = [];
 
-@Controller('/users')
+@Controller('users')
 export default class Users {
 
   @Get(':id')

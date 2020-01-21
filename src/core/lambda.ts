@@ -21,10 +21,10 @@ function generateUrlFromMethods(methods: Method[], url: string) {
     ),
   );
 
+  url = url.replace(/^\/|\/$/g, '');
   url = url
-    .replace(/^\/|\/$/g, '')
     .split('/')
-    .slice(maxSegmentLength + 1)
+    .slice(url.split('/').length - maxSegmentLength)
     .join('/');
 
   return path.join('/', url);

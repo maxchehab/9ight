@@ -1,2 +1,2 @@
-export { RequestMethod } from './request-method.enum';
-export { ParameterType } from './parameter-type.enum';
+export * from './request-method.enum';
+export * from './parameter-type.enum';

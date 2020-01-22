@@ -1,2 +1,2 @@
-export { Lambda } from './lambda';
-export { rewrites } from './rewrites';
+export * from './lambda';
+export * from './rewrites';

@@ -41,24 +41,5 @@
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "build": "tsc -p tsconfig.json",
     "test": "jest"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "testRegex": ".spec.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "testPathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node",
-    "setupFiles": [
-      "./test/setup.ts"
-    ]
   }
 }

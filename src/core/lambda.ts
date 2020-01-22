@@ -1,70 +1,13 @@
 import { NextApiResponse, NextApiRequest } from 'next';
-import { pathToRegexp, Key } from 'path-to-regexp';
-import * as paths from 'path';
-import * as urls from 'url';
+import { generateUrlFromMethods } from '../common/utils';
 
-import { RequestMethod } from '../common';
-import { ClassType, DecoratorTarget, Method } from '../common/interfaces';
+import { RequestMethod, findMethodAndParams } from '../common';
+import { ClassType, DecoratorTarget } from '../common/interfaces';
 
 export type LambdaFunction = (
   req: NextApiRequest | boolean,
   res?: NextApiResponse,
 ) => Promise<void | DecoratorTarget>;
-
-interface Params {
-  [key: string]: string;
-}
-
-function generateUrlFromMethods(methods: Method[], url: string): string {
-  const maxSegmentLength = Math.max(
-    ...methods.map(
-      ({ path }) => path.replace(/^\/|\/$/g, '').split('/').length,
-    ),
-  );
-
-  url = urls.parse(url).pathname;
-  url = url.replace(/^\/|\/$/g, '');
-  url = url
-    .split('/')
-    .slice(url.split('/').length - maxSegmentLength)
-    .join('/');
-
-  return paths.join('/', url);
-}
-
-function match(url: string, path: string): Params | void {
-  const keys = new Array<Key>();
-  const regex = pathToRegexp(path, keys);
-  const values = regex.exec(url);
-
-  if (values) {
-    return valuesToParams(values.slice(1), keys);
-  }
-}
-
-function findMethodAndParams(url: string, methods: Method[]): [Method, Params] {
-  let params = {};
-
-  const method = methods.find(({ path }) => {
-    const p = match(url, path);
-
-    if (p) {
-      params = p;
-      return true;
-    }
-  });
-
-  return [method, params];
-}
-
-function valuesToParams(values: string[], keys: Key[]) {
-  return values.reduce((params, val, i) => {
-    if (val === undefined) return params;
-    return Object.assign(params, {
-      [keys[i].name]: decodeURIComponent(val),
-    });
-  }, {});
-}
 
 export function Lambda<t>(
   Class: ClassType<t & DecoratorTarget>,

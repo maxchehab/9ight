@@ -16,7 +16,7 @@ export function Lambda<t>(
 
   if (!lambda.__9ight__methods) {
     throw new TypeError(
-      'Class provided to Lambda is missing Request Method decorators.',
+      `The class ${Class?.name} does not have any method decorators https://err.sh/maxchehab/9ight/no-method-decorators-found.`,
     );
   }
 

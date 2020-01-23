@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Lambda throws a no-method-decorators error when a class does not have any method decorators 1`] = `"The class Users does not have any method decorators https://err.sh/maxchehab/9ight/no-method-decorators-found."`;

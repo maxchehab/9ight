@@ -25,41 +25,26 @@ export function Lambda<t>(
       return lambda;
     }
 
-    const requestMethod = req.method && req.method.toUpperCase();
-
-    if (typeof requestMethod !== 'string') {
-      return res.status(404).json({ message: 'Not found' });
-    }
-
+    const requestMethod: string = req.method?.toUpperCase();
     const methods = lambda.__9ight__methods?.filter(
       ({ method }) => method === requestMethod,
     );
 
     const url = generateUrlFromMethods(methods, req.url);
-
-    console.log({ url, methods, realUrl: req.url });
-
     const [method, params] = findMethodAndParams(url, methods);
-
     const property = method?.property;
-
     (req as any).params = params;
-
-    console.log({ property, params });
 
     if (!property) {
       return res.status(404).json({ message: 'Not found' });
     }
 
     const args = new Array();
-
     const parameters = lambda.__9ight__methodParameters?.get(property) || [];
 
     for await (const param of parameters) {
       args[param.index] = await param.transform(req, res);
     }
-
-    console.log({ args });
 
     const response = await (lambda as any)[property](...args);
 
@@ -82,6 +67,6 @@ export function Lambda<t>(
       return res.json(response);
     }
 
-    return res.send(response);
+    return res.send(String(response));
   };
 }

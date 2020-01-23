@@ -5,7 +5,7 @@ module.exports = {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
   testPathIgnorePatterns: ['/node_modules/', '/examples/'],
-  coverageDirectory: '../coverage',
+  coverageDirectory: 'coverage',
   testEnvironment: 'node',
   coverageReporters: ['text-summary', 'lcov'],
   collectCoverageFrom: ['src/**/*.ts'],

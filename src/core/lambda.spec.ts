@@ -61,7 +61,7 @@ describe('Lambda', () => {
     const { status, data } = await axios.get(url.concat('/invalid'));
 
     expect(status).toEqual(404);
-    expect(data).toEqual({ message: 'Not found' });
+    expect(data).toEqual({ code: 'Not Found' });
 
     await closeServer(server);
   });

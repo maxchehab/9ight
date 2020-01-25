@@ -1,8 +1,10 @@
 import { NextApiResponse, NextApiRequest } from 'next';
 import { generateUrlFromMethods } from '../common/utils';
 
-import { RequestMethod, findMethodAndParams } from '../common';
 import { ClassType, DecoratorTarget } from '../common/interfaces';
+import { HttpException } from '../common/exceptions/http.exception';
+import { RequestMethod, findMethodAndParams } from '../common';
+import { NotFoundException } from '../common/exceptions/not-found.exception';
 
 export type LambdaFunction = (
   req: NextApiRequest | boolean,
@@ -21,52 +23,66 @@ export function Lambda<t>(
   }
 
   return async (req: NextApiRequest | boolean, res: NextApiResponse) => {
-    if (typeof req === 'boolean') {
-      return lambda;
-    }
-
-    const requestMethod: string = req.method?.toUpperCase();
-    const methods = lambda.__9ight__methods?.filter(
-      ({ method }) => method === requestMethod,
-    );
-
-    const url = generateUrlFromMethods(methods, req.url);
-    const [method, params] = findMethodAndParams(url, methods);
-    const property = method?.property;
-    (req as any).params = params;
-
-    if (!property) {
-      return res.status(404).json({ message: 'Not found' });
-    }
-
-    const args = new Array();
-    const parameters = lambda.__9ight__methodParameters?.get(property) || [];
-
-    for await (const param of parameters) {
-      args[param.index] = await param.transform(req, res);
-    }
-
-    const response = await (lambda as any)[property](...args);
-
-    if (res.headersSent) {
-      return;
-    }
-
-    let statusCode = 200;
-
-    switch (requestMethod) {
-      case RequestMethod.POST: {
-        statusCode = 201;
-        break;
+    try {
+      if (typeof req === 'boolean') {
+        return lambda;
       }
+
+      const requestMethod: string = req.method?.toUpperCase();
+      const methods = lambda.__9ight__methods?.filter(
+        ({ method }) => method === requestMethod,
+      );
+
+      const url = generateUrlFromMethods(methods, req.url);
+      const [method, params] = findMethodAndParams(url, methods);
+      const property = method?.property;
+      (req as any).params = params;
+
+      if (!property) {
+        throw new NotFoundException();
+      }
+
+      const args = new Array();
+      const parameters = lambda.__9ight__methodParameters?.get(property) || [];
+
+      for await (const param of parameters) {
+        args[param.index] = await param.transform(req, res);
+      }
+
+      const response = await (lambda as any)[property](...args);
+
+      if (res.headersSent) {
+        return;
+      }
+
+      let statusCode = 200;
+
+      switch (requestMethod) {
+        case RequestMethod.POST: {
+          statusCode = 201;
+          break;
+        }
+      }
+
+      res.status(statusCode);
+
+      if (typeof response === 'object') {
+        return res.json(response);
+      }
+
+      return res.send(String(response));
+    } catch (error) {
+      console.trace(error);
+
+      const exception: HttpException = error;
+
+      if (exception.isHttpException) {
+        return res
+          .status(exception.statusCode)
+          .json({ code: exception.code, message: exception.message });
+      }
+
+      return res.status(500).json({ code: 'Internal Server Error' });
     }
-
-    res.status(statusCode);
-
-    if (typeof response === 'object') {
-      return res.json(response);
-    }
-
-    return res.send(String(response));
   };
 }

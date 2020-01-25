@@ -9,12 +9,12 @@ yarn add 9ight next
 ```ts
 // pages/api/users.ts
 
-import { Body, Controller, Get, Params, Post } from '9ight';
+import { Body, Controller, Get, Lambda, Params, Post } from '9ight';
 
 const db = [];
 
 @Controller('users')
-export default class Users {
+class Users {
 
   @Get(':id')
   get(@Params() { id }) {
@@ -38,4 +38,6 @@ export default class Users {
     return db;
   }
 }
+
+export default Lambda(Users);
 ```

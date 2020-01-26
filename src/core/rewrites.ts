@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as glob from 'glob';
 import * as path from 'path';
 import * as tsnode from 'ts-node';
-import * as _eval from 'eval';
+import _eval from 'eval';
 
 import { LambdaFunction } from './lambda';
 

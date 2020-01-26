@@ -18,8 +18,6 @@ function createParameterMappingDecorator(
     propertyKey: string | symbol,
     parameterIndex: number,
   ) {
-    console.log('setting', type, 'parameter on function: ', propertyKey);
-
     if (!target.__9ight__methodParameters) {
       target.__9ight__methodParameters = new Map<
         string | symbol,

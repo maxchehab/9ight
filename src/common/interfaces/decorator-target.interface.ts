@@ -2,6 +2,7 @@ import { Parameter } from './parameter.interface';
 import { RequestMethod } from '../constants';
 
 export interface DecoratorTarget {
+  __9ight__isLambda?: true;
   __9ight__methods?: Array<Method>;
   __9ight__methodParameters?: Map<string | symbol, Parameter[]>;
 }

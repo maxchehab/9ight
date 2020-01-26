@@ -1,9 +1,8 @@
-import * as fs from 'fs';
-import * as glob from 'glob';
-import * as path from 'path';
-import * as tsnode from 'ts-node';
-import _eval from 'eval';
+import build from 'next/dist/build';
+import fs from 'fs-extra';
+import path from 'path';
 
+import { DecoratorTarget } from '../common';
 import { LambdaFunction } from './lambda';
 
 interface RouteMap {
@@ -12,62 +11,109 @@ interface RouteMap {
 }
 
 export async function rewrites(): Promise<RouteMap[]> {
-  const dir = process.cwd();
-  const pagePath = path.join(dir, 'pages');
-  const files = glob.sync(path.join(pagePath, 'api', '**/*.ts'));
+  const nightPath = path.resolve(process.cwd(), '.next', '9ight');
+  const lockPath = path.resolve(nightPath, 'BUILDING');
 
-  const compiler = tsnode.create();
-
-  const configPath = compiler.ts.findConfigFile(dir, fileName =>
-    fs.existsSync(fileName),
-  );
-
-  const config = require(configPath);
-  config.compilerOptions.target = 'es5';
-  config.compilerOptions.module = 'es5';
-
-  const rewrites = new Array<RouteMap>();
-
-  for await (const file of files) {
-    const content = fs.readFileSync(file, { encoding: 'UTF8' });
-    const { outputText } = compiler.ts.transpileModule(content, config);
-
-    const lambdaFn: LambdaFunction = _eval(outputText, true).default;
-    const lambda = await lambdaFn(true);
-
-    if (!lambda) {
-      continue;
-    }
-
-    const { __9ight__methods: methods } = lambda;
-
-    const { dir, name } = path.parse(file);
-    const fileName = name === 'index' ? '' : name;
-    const destPath = path.join(dir, fileName);
-    const destination = path.join('/', path.relative(pagePath, destPath));
-
-    methods.forEach(method => {
-      const source = path.join(
-        '/',
-        path.relative(pagePath, dir),
-        fileName,
-        method.path,
-      );
-
-      rewrites.push({ source, destination });
-    });
+  if (await fs.pathExists(lockPath)) {
+    return [];
   }
 
-  return rewrites.reduce((routes, map) => {
-    const exists = routes.find(
-      ({ source, destination }) =>
-        source === map.source && destination === map.destination,
-    );
-
-    if (!exists) {
-      routes.push(map);
+  try {
+    if (!(await fs.pathExists(nightPath))) {
+      await fs.mkdirp(nightPath);
     }
 
-    return routes;
-  }, []);
+    fs.writeFileSync(lockPath, '1', { encoding: 'utf8' });
+
+    await build(process.cwd(), {
+      distDir: path.relative(process.cwd(), nightPath),
+    } as null);
+
+    const rewrites = [];
+
+    const pageManifestPath = path.resolve(
+      nightPath,
+      'server',
+      'pages-manifest.json',
+    );
+
+    const buildIDPath = path.resolve(nightPath, 'BUILD_ID');
+
+    if (!fs.existsSync(pageManifestPath) || !fs.existsSync(buildIDPath)) {
+      throw new Error(
+        'Could not find build artifacts. Your project may have failed to build!',
+      );
+    }
+
+    const buildID: string = fs.readFileSync(buildIDPath, { encoding: 'UTF8' });
+
+    const staticPageDirectory = path.resolve(
+      nightPath,
+      'server',
+      'static',
+      buildID,
+      'pages',
+    );
+
+    const manifest = await fs.readJson(pageManifestPath);
+
+    for (const key in manifest) {
+      const file = path.resolve(nightPath, 'server', manifest[key]);
+
+      if (!path.extname(file).match(/.js$/)) {
+        continue;
+      }
+
+      const lambdaFn: LambdaFunction = require(file).default;
+      let lambda: DecoratorTarget | void;
+
+      try {
+        lambda = await lambdaFn(true);
+
+        if (!lambda || !lambda.__9ight__isLambda) {
+          continue;
+        }
+      } catch {
+        continue;
+      }
+
+      const { __9ight__methods: methods } = lambda;
+
+      const { dir, name } = path.parse(file);
+      const fileName = name === 'index' ? '' : name;
+      const destination = path.join(
+        '/',
+        path.relative(staticPageDirectory, dir),
+        fileName,
+      );
+
+      methods.forEach(method => {
+        const source = path.join(
+          '/',
+          path.relative(staticPageDirectory, dir),
+          fileName,
+          method.path,
+        );
+
+        rewrites.push({ source, destination });
+      });
+    }
+
+    return rewrites.reduce((routes, map) => {
+      const exists = routes.find(
+        ({ source, destination }) =>
+          source === map.source && destination === map.destination,
+      );
+
+      if (!exists) {
+        routes.push(map);
+      }
+
+      return routes;
+    }, []);
+  } finally {
+    if (fs.existsSync(lockPath)) {
+      fs.unlinkSync(lockPath);
+    }
+  }
 }

@@ -22,6 +22,8 @@ export function Lambda<t>(
     );
   }
 
+  lambda.__9ight__isLambda = true;
+
   return async (req: NextApiRequest | boolean, res: NextApiResponse) => {
     try {
       if (typeof req === 'boolean') {

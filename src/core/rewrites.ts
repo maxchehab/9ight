@@ -1,6 +1,8 @@
 import build from 'next/dist/build';
+import chalk from 'chalk';
 import fs from 'fs-extra';
 import path from 'path';
+import sinon from 'sinon';
 
 import { DecoratorTarget } from '../common';
 import { LambdaFunction } from './lambda';
@@ -9,6 +11,12 @@ interface RouteMap {
   source: string;
   destination: string;
 }
+
+const log = (...args: any) =>
+  console.log(
+    chalk.bold(chalk.green('9ight')).concat(':'),
+    chalk.bold(...args),
+  );
 
 export async function rewrites(): Promise<RouteMap[]> {
   const nightPath = path.resolve(process.cwd(), '.next', '9ight');
@@ -25,9 +33,14 @@ export async function rewrites(): Promise<RouteMap[]> {
 
     fs.writeFileSync(lockPath, '1', { encoding: 'utf8' });
 
+    log('Generating temporary build');
+    const stdoutStub = sinon.stub(process.stdout, 'write');
+
     await build(process.cwd(), {
       distDir: path.relative(process.cwd(), nightPath),
     } as null);
+    stdoutStub.restore();
+    log('Parsing build directory');
 
     const rewrites = [];
 
@@ -45,7 +58,9 @@ export async function rewrites(): Promise<RouteMap[]> {
       );
     }
 
-    const buildID: string = fs.readFileSync(buildIDPath, { encoding: 'UTF8' });
+    const buildID: string = fs.readFileSync(buildIDPath, {
+      encoding: 'UTF8',
+    });
 
     const staticPageDirectory = path.resolve(
       nightPath,
@@ -56,6 +71,8 @@ export async function rewrites(): Promise<RouteMap[]> {
     );
 
     const manifest = await fs.readJson(pageManifestPath);
+
+    log('Generating rewrites');
 
     for (const key in manifest) {
       const file = path.resolve(nightPath, 'server', manifest[key]);
@@ -98,6 +115,8 @@ export async function rewrites(): Promise<RouteMap[]> {
         rewrites.push({ source, destination });
       });
     }
+
+    log('Rewrites generated successfully');
 
     return rewrites.reduce((routes, map) => {
       const exists = routes.find(

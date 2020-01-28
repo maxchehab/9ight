@@ -6,6 +6,7 @@ import {
   ParameterTransformer,
 } from '../interfaces';
 import { ParameterType } from '../constants';
+import { BadRequestException } from '../exceptions/bad-request.exception';
 
 type Validator = (input: any) => Promise<boolean>;
 
@@ -49,8 +50,7 @@ export const Query = (validator?: Validator) =>
         const valid = await validator(req.query);
 
         if (!valid) {
-          // TODO Throw a BAD_REQUEST
-          throw Error('bad request');
+          throw new BadRequestException();
         }
       }
 
@@ -69,8 +69,7 @@ export const Body = (validator?: Validator) =>
         const valid = await validator(req.body);
 
         if (!valid) {
-          // TODO Throw a BAD_REQUEST
-          throw Error('bad request');
+          throw new BadRequestException();
         }
       }
 
@@ -89,7 +88,7 @@ export const Params = (validator?: Validator) =>
         const valid = await validator(req.query);
 
         if (!valid) {
-          throw Error('bad request');
+          throw new BadRequestException();
         }
       }
 

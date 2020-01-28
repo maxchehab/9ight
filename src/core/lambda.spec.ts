@@ -44,7 +44,7 @@ describe('Lambda', () => {
     const lambda = Lambda(Users);
     const classInstance = await lambda(true);
 
-    expect(classInstance).toEqual(new Users());
+    expect(classInstance).toBeInstanceOf(Users);
   });
 
   it('throws a 404 NOT_FOUND when no methods match the url', async () => {
